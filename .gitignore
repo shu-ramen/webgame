@@ -7,6 +7,5 @@ src/webgame/resources/react_jsx/node_modules/
 *.pot
 *.pyc
 **/__pycache__/
-local_settings.py
-db.sqlite3
-media
+/src/webgaem/local_settings.py
+/src/webgame/db.sqlite3
