@@ -18,5 +18,7 @@ $ conda activate [Your Django Environment]
 $ cd src/webgame/react_jsx
 $ npm install
 $ cd ..
+$ python manage.py makemigrations
+$ python manage.py migrate
 $ python manage.py runserver react
 ```
