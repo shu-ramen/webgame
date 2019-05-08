@@ -12,4 +12,16 @@ if __name__ == '__main__':
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
-    execute_from_command_line(sys.argv)
+        
+    try:
+        if sys.argv[2] == "react":
+            project_root = os.getcwd()
+            os.chdir(os.path.join(project_root, "resources\\react_jsx"))
+            os.system("node_modules\.bin\webpack")
+            os.chdir(project_root)
+            sys.argv.pop(2)
+        execute_from_command_line(sys.argv)
+    except IndexError:
+        execute_from_command_line(sys.argv)
+    else:
+        execute_from_command_line(sys.argv)
