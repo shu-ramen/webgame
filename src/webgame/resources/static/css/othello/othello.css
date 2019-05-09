@@ -1,0 +1,37 @@
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.square-col {
+  margin-right: -1px;
+  margin-top: -1px;
+}
+
+.square {
+  position: relative;
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 0;
+  padding-top: 100%;
+  text-align: center;
+  width: 100%;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.stone {
+    position: absolute;
+    top: 1;
+    left: 1;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: auto;
+}
