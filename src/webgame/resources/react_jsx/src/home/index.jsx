@@ -1,55 +1,76 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import request from 'superagent'
-
-function addHeader(request, csrfToken) {
-    return request
-      .set('X-CSRFToken', csrfToken)
-      .set('X-Requested-With', 'XMLHttpRequest');
-}
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 
 class Home extends React.Component {
     constructor() {
         super();
-        this.state = {
-            count: 0,
-        }
-    }
-
-    countUp() {
-        this.setState({
-            count: (this.state.count + 1),
-        });
-    }
-
-    sendData() {
-        var url = '/send_data';
-
-        var csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-
-        addHeader(request.post(url), csrfToken)
-            .send({
-                data: "data",
-            })
-            .end(function(err, res){
-                if (err) {
-                  alert(res.text);
-                }
-                alert(res.text);
-            }.bind(this));
     }
 
     render() {
         return (
-            <div className="home">
-                <a href="#" onClick={() => this.countUp()}>{this.state.count}</a><br></br>
-                <a href="#" onClick={() => this.sendData()}>Send Data</a>
-            </div>
+            <Container>
+                <Row>
+                    <br />
+                    <h1>Welcome to WebGame!</h1>
+                    <br />
+                </Row>
+                <Row>
+                    <p>There will be a lot of games in the future!!</p>
+                    <br />
+                </Row>
+                <Row>
+                    <Col>
+                        <br />
+                            <h4>BOARD GAMES</h4>
+                        <br />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Card bg="dark" text="white" style={{ width: '18rem' }}>
+                            <Card.Header>BOARD GAMES</Card.Header>
+                            <Card.Body>
+                                <Card.Title>OTHELLO</Card.Title>
+                                <Card.Text>
+                                    Simple but deep game...
+                                </Card.Text>
+                                <Button variant="dark" href="/othello" block>PLAY</Button>
+                            </Card.Body>
+                        </Card>
+                        <br />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <br />
+                            <h4>CARD GAMES</h4>
+                        <br />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        Coming Soon!!
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <br />
+                            <h4>OTHER GAMES</h4>
+                        <br />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        Coming Soon!!
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }
 
 ReactDOM.render(
     <Home />,
-    document.getElementById('root')
+    document.getElementById('main')
 );
