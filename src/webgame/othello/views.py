@@ -7,3 +7,9 @@ def index(request):
     template = loader.get_template('othello/index.html')
     context = {}
     return HttpResponse(template.render(context, request))
+
+def vscpu(request, level):
+    print(level)
+    template = loader.get_template('othello/vscpu.html')
+    context = {}
+    return HttpResponse(template.render(context, request))

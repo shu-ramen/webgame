@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    {% csrf_token %}
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/share/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/share/bootstrap-grid.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/share/bootstrap-reboot.min.css' %}">
+  </head>
+  <body>
+    <div id="header"></div>
+    <div id="main"></div>
+    <script src="{% static 'js/share_header.js' %}"></script>
+    <script src="{% static 'js/othello_vscpu.js' %}"></script>
+  </body>
+</html>

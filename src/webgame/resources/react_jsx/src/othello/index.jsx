@@ -27,7 +27,7 @@ class Index extends React.Component {
                                     <Card.Text>
                                         Let's battle with CPU (LEVEL 1)
                                     </Card.Text>
-                                    <Button variant="dark" block>START</Button>
+                                    <Button variant="dark" href="vscpu/1" block>START</Button>
                                 </Card.Body>
                             </Card>
                             <br />
@@ -40,7 +40,7 @@ class Index extends React.Component {
                                     <Card.Text>
                                         Let's battle with CPU (LEVEL 2)
                                     </Card.Text>
-                                    <Button variant="dark" block>START</Button>
+                                    <Button variant="dark" href="vscpu/2" block>START</Button>
                                 </Card.Body>
                             </Card>
                             <br />
@@ -53,7 +53,7 @@ class Index extends React.Component {
                                     <Card.Text>
                                         Let's battle with CPU (LEVEL 3)
                                     </Card.Text>
-                                    <Button variant="dark" block>START</Button>
+                                    <Button variant="dark" href="vscpu/3"  block>START</Button>
                                 </Card.Body>
                             </Card>
                             <br />
