@@ -37,7 +37,7 @@ class Signup extends React.Component {
                                 <Form.Label>Password (Confirmation)</Form.Label>
                                 <Form.Control name="password2" type="password" placeholder="Enter password" required />
                             </Form.Group>
-                            <Button variant="primary" size="lg" type="submit" block>Sign up</Button>
+                            <Button variant="success" size="lg" type="submit" block>Sign up</Button>
                         </Form>
                     </Col>
                     <Col></Col>
