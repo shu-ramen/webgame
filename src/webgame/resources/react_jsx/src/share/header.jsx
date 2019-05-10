@@ -29,26 +29,22 @@ class Header extends React.Component {
     getNavbarForm(authenticated) {
         if (authenticated) {
             return (
-                <Form inline>
-                    <ButtonToolbar>
-                        <ButtonGroup>
-                            <Button variant="outline-secondary" href="#">Account Settings</Button>
-                            <Button variant="outline-danger" href="/accounts/logout/">Log Out</Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </Form>
+                <ButtonToolbar>
+                    <ButtonGroup>
+                        <Button variant="outline-secondary" href="#">Account Settings</Button>
+                        <Button variant="outline-danger" href="/accounts/logout/">Log Out</Button>
+                    </ButtonGroup>
+                </ButtonToolbar>
             );
         }
         else {
             return (
-                <Form inline>
-                    <ButtonToolbar>
-                        <ButtonGroup>
-                            <Button variant="outline-primary" href="/accounts/login/">Log In</Button>
-                            <Button variant="outline-success" href="/accounts/signup/">Sign Up</Button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                </Form>
+                <ButtonToolbar>
+                    <ButtonGroup>
+                        <Button variant="outline-primary" href="/accounts/login/">Log In</Button>
+                        <Button variant="outline-success" href="/accounts/signup/">Sign Up</Button>
+                    </ButtonGroup>
+                </ButtonToolbar>
             );
         }
     }

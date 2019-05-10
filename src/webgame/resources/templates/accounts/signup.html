@@ -1,6 +1,8 @@
-{% extends 'registration_base.html' %}
+{% extends 'base.html' %}
 
 {% block title %}Sign UP{% endblock %}
+
+{% block stylesheet %}{% endblock %}
 
 {% block content %}
 <h1>Sign up</h1>
@@ -11,4 +13,8 @@
         <button type="submit" class="submit">Sign up</button>
     </form>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/registration_login.js"></script>
 {% endblock %}
