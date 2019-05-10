@@ -38,6 +38,7 @@ class Signup extends React.Component {
                                 <Form.Control name="password2" type="password" placeholder="Enter password" required />
                             </Form.Group>
                             <Button variant="success" size="lg" type="submit" block>Sign up</Button>
+                            <Button variant="link" href="/accounts/login/" block> I have an account</Button>
                         </Form>
                     </Col>
                     <Col></Col>
