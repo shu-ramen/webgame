@@ -98,6 +98,26 @@ class Login extends React.Component {
     }
 }
 
+class Error extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return (
+            <Container>
+                <Row>
+                    <Col></Col>
+                    <Col xl={8} lg={8} md={8} sm={12} sx={12}>
+                        <Alert variant="danger">{this.props.error}</Alert>
+                    </Col>
+                    <Col></Col>
+                </Row>
+            </Container>
+        )
+    }
+}
+
 if (document.getElementById('formerror-hasnext-authenticated-login') != null) {
     ReactDOM.render(<Login formError={true} hasNext={true} authenticated={true} />, document.getElementById('formerror-hasnext-authenticated-login'))
 }
