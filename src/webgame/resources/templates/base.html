@@ -1,31 +1,26 @@
 {% load staticfiles %}
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <title>{% if request.path != '/' %}{% block title %}{% endblock %} | {% endif %}Blog App with Auth | Django2 Tutorial</title>
-</head>
-<body>
-<div class="container">
-    <header>
-        <p class="site-name"><a href="{% url 'home:home-index' %}">WebGame</a></p>
-        <nav>
-            <ul>
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'logout' %}" class="logout">Logout</a></li>
-                {% else %}
-                <li><a href="{% url 'accounts:signup' %}" class="signup">Sign up</a></li>
-                <li><a href="{% url 'login' %}" class="login">Login</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
-    <div class="content">
-        {% block content %}{% endblock %}
-    </div>
-</div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/share/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/share/bootstrap-grid.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/share/bootstrap-reboot.min.css' %}">
+    {% block stylesheet %}{% endblock %}
+    <title>{% block title %}{% endblock %} | WebGame</title>
+  </head>
+  <body>
+    {% if user.is_authenticated %}
+    <div id="authenticated-header"></div>
+    {% else %}
+    <div id="not-authenticated-header"></div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+    
+    <script src="{% static 'js/share_header.js' %}"></script>
+    {% block scripts %}{% endblock %}
+  </body>
 </html>
