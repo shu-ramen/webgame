@@ -5,16 +5,19 @@
 {% block stylesheet %}{% endblock %}
 
 {% block content %}
-<h1>Sign up</h1>
-<section class="common-form">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="submit">Sign up</button>
-    </form>
-</section>
+{% csrf_token %}
+<br />
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div name="error">{{ error }}</div>
+        {% endfor %}
+     {% endfor %}
+{% endif %} 
+
+<div id="main"></div>
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/registration_login.js"></script>
+<script src="/static/js/accounts_signup.js"></script>
 {% endblock %}

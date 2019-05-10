@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Row, Col, Alert, Container, Form, Button } from 'react-bootstrap';
+import { Row, Col, Alert, Container, Button } from 'react-bootstrap';
 
 class LoggedOut extends React.Component {
     constructor() {
