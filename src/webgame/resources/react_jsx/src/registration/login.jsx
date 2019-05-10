@@ -86,7 +86,7 @@ class Login extends React.Component {
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control name="password" type="password" placeholder="Enter password" required />
                             </Form.Group>
-                            <Button variant="primary" type="submit" block>Log in</Button>
+                            <Button variant="primary" size="lg"  type="submit" block>Log in</Button>
                             <Button variant="link" href="/accounts/signup/" block>Create new account</Button>
                             {nextTag}
                         </Form>

@@ -2,8 +2,12 @@
 
 {% block title %}Logout{% endblock %}
 
+{% block stylesheet %}{% endblock %}
+
 {% block content %}
-<h1>Logged Out</h1>
-<p>Thanks for spending some quality time with the Web site today.</p>
-<p><a href="{% url 'login' %}">Log in again</a></p>
+<div id="main"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/registration_logged_out.js"></script>
 {% endblock %}
