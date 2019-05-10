@@ -31,7 +31,7 @@ class Header extends React.Component {
             return (
                 <ButtonToolbar>
                     <ButtonGroup>
-                        <Button variant="outline-secondary" href="#">Account Settings</Button>
+                        <Button variant="outline-secondary" href="#">{this.props.username}</Button>
                         <Button variant="outline-danger" href="/accounts/logout/">Log Out</Button>
                     </ButtonGroup>
                 </ButtonToolbar>
@@ -66,16 +66,17 @@ class Header extends React.Component {
     }
 }
 
+if (document.getElementById('authenticated-header') != null) {
+    let username = document.getElementById('authenticated-header').textContent;
+    ReactDOM.render(
+        <Header authenticated={true} username={username} />,
+        document.getElementById('authenticated-header')
+    );
+}
+
 if (document.getElementById('not-authenticated-header') != null) {
     ReactDOM.render(
         <Header authenticated={false} />,
         document.getElementById('not-authenticated-header')
-    );
-}
-
-if (document.getElementById('authenticated-header') != null) {
-    ReactDOM.render(
-        <Header authenticated={true} />,
-        document.getElementById('authenticated-header')
     );
 }

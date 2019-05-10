@@ -13,7 +13,7 @@
   </head>
   <body>
     {% if user.is_authenticated %}
-    <div id="authenticated-header"></div>
+    <div id="authenticated-header">{{ user.get_username }}</div>
     {% else %}
     <div id="not-authenticated-header"></div>
     {% endif %}
