@@ -68,6 +68,6 @@ class DBControl(object):
         messages = []
         game = Game.objects.get(id=gameId)
         chats = Chat.objects.filter(game=game)
-        for chat in chats:
+        for chat in reversed(chats):
             messages.append("[{}] {} ({})".format(chat.speaker, chat.message, str(chat.timestamp)[0:19]))
         return messages
