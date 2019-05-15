@@ -1,7 +1,8 @@
 import random
 
 from django.contrib.auth.models import User
-from othello.models import Player, Status, Game, Chat
+from othello.models import Player, Status, Game, Log, Chat
+from othello.backend.othello import OthelloSystem, BitBoard
 
 class DBControl(object):
     @staticmethod
@@ -71,3 +72,40 @@ class DBControl(object):
         for chat in reversed(chats):
             messages.append("[{}] {} ({})".format(chat.speaker, chat.message, str(chat.timestamp)[0:19]))
         return messages
+    
+    def getBoard(gameId, userId):
+        """ 最新の盤面と次のプレイヤー情報を取得
+        
+        Args:
+            gameId (int): 対戦中のゲームID
+            userId (int): ログイン中のユーザID
+        
+        Returns:
+            list(list(int)), boolean: 盤面情報と次の指し手がユーザーか否か
+        """
+        # 変数を設定
+        squares = None
+        isMyTurn = False
+        # ゲーム情報を取得
+        game = Game.objects.get(id=gameId)
+        # ログを取得
+        logs = Log.objects.filter(game=game)
+        if (len(logs) > 0):
+            # 一つでも過去の指し手があれば，最新のログを取得
+            log = logs.latest("timestamp")
+            blackBoard = log.blackBoard
+            whiteBoard = log.whiteBoard
+            squares = BitBoard.boardToSquares(blackBoard, whiteBoard)
+            if log.player.user.id != userId:
+                isMyTurn = True
+        else:
+            # まだ一つも指し手がなければ
+            squares = OthelloSystem.getInitSquares()
+            if game.firstPlayer == "player1":
+                if game.player1.user.id == userId:
+                    isMyTurn = True
+            elif game.firstPlayer == "player2":
+                if game.player2.user.id == userId:
+                    isMyTurn = True
+        # Return
+        return squares, isMyTurn

@@ -50,6 +50,19 @@ class App extends React.Component {
 
     reload() {
         if (this.state.isStarted) {
+            // 盤面取得
+            addHeader(request.get("getboard"))
+                .end(function (err, res) {
+                    if (err) {
+                        alert(res.text);
+                    }
+                    console.dir(res.body);
+                    this.setState({
+                        squares: res.body["squares"],
+                        isMyTurn: res.body["isMyTurn"],
+                    });
+                }.bind(this));
+            // チャット取得
             addHeader(request.get("getchat"))
                 .end(function (err, res) {
                     if (err) {
@@ -57,7 +70,7 @@ class App extends React.Component {
                     }
                     this.setState({
                         messages: res.body["messages"]
-                    })
+                    });
                 }.bind(this));
         }
     }

@@ -56,3 +56,15 @@ def vscpuGetChat(request, level, gameId):
         return JsonResponse(response)
     else:
         return Http404
+
+@login_required
+def vscpuGetBoard(request, level, gameId):
+    if request.method == 'GET':
+        squares, isMyTurn = DBC.getBoard(gameId=gameId, userId=request.user.id)
+        response = {
+            "squares": squares,
+            "isMyTurn": isMyTurn
+        }
+        return JsonResponse(response)
+    else:
+        return Http404
