@@ -1,4 +1,6 @@
 import React from 'react';
+import request from 'superagent';
+import { addHeader } from '../../../share/csrf.jsx';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 
 export class Info extends React.Component {
@@ -6,7 +8,44 @@ export class Info extends React.Component {
         super();
     }
 
+    start() {
+        addHeader(request.get("./create"))
+            .end(function (err, res) {
+                if (err) {
+                    alert(res.text);
+                }
+                else {
+                    location.href = res.body["gameId"] + "/";
+                }
+            }.bind(this));
+    }
+
     render() {
+        let buttons = "";
+        if (this.props.isStarted == false) {
+            buttons = (
+                <div>
+                    <Row>
+                        <Button variant="primary" size="lg" onClick={() => this.start()} block>START</Button>
+                    </Row>
+                </div>
+            );
+        }
+        else {
+            buttons = (
+                <div>
+                    <br />
+                    <Row>
+                        <Button variant="secondary" size="lg" block>PASS</Button>
+                    </Row>
+                    <br />
+                    <Row>
+                        <Button variant="danger" size="lg" block>GIVE UP</Button>
+                    </Row>
+                </div>
+            )
+        }
+
         return (
             <Card>
                 <Card.Header className="text-center" as="h5">GAME INFORMTION</Card.Header>
@@ -30,13 +69,7 @@ export class Info extends React.Component {
                             </Col>
                         </Row>
                         <br />
-                        <Row>
-                            <Button variant="secondary" size="lg" block>PASS</Button>
-                        </Row>
-                        <br />
-                        <Row>
-                            <Button variant="danger" size="lg" block>GIVE UP</Button>
-                        </Row>
+                        { buttons }
                     </Container>
                 </Card.Body>
             </Card>
