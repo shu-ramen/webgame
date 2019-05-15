@@ -6,6 +6,15 @@ from othello.models import Player, Status, Game, Chat
 class DBControl(object):
     @staticmethod
     def createGameCPU(userId, cpuLevel):
+        """ CPUとのゲームを新規作成
+        
+        Args:
+            userId (int): ログインしているユーザーのID
+            cpuLevel (int): 対戦するCPUのレベル
+        
+        Returns:
+            othello.models.Game: 開始したゲームのインスタンス
+        """
         # ユーザー取得
         user = User.objects.get(id=userId)
         # CPU情報取得
@@ -34,6 +43,13 @@ class DBControl(object):
 
     @staticmethod
     def sendChat(gameId, userId, message):
+        """ 送信されたチャットを保存する
+        
+        Args:
+            gameId (int): 対戦中のゲームのID
+            userId (int): 送信者のユーザID
+            message (str): 送信されたメッセージ
+        """
         game = Game.objects.get(id=gameId)
         user = User.objects.get(id=userId)
         chat = Chat(game=game, speaker=user, message=message)
@@ -41,6 +57,14 @@ class DBControl(object):
 
     @staticmethod
     def getChat(gameId):
+        """ 特定のゲームのチャットをすべて取得する
+        
+        Args:
+            gameId (int): 対戦中のゲームID
+        
+        Returns:
+            list(str): メッセージ一覧
+        """
         messages = []
         game = Game.objects.get(id=gameId)
         chats = Chat.objects.filter(game=game)
