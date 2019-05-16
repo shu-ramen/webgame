@@ -64,7 +64,7 @@ class DBControl(object):
             gameId (int): 対戦中のゲームID
         
         Returns:
-            list(str): メッセージ一覧
+            list[str]: メッセージ一覧
         """
         messages = []
         game = Game.objects.get(id=gameId)
@@ -82,7 +82,7 @@ class DBControl(object):
             userId (int): ログイン中のユーザID
         
         Returns:
-            list(list(int)), boolean: 盤面情報と次の指し手がユーザーか否か
+            list[list[int]], boolean: 盤面情報と次の指し手がユーザーか否か
         """
         # 変数を設定
         squares = None

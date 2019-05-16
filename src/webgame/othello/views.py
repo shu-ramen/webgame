@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.template import loader
 from django.contrib.auth.decorators import login_required
 
-from othello.backend.DBControl import DBControl as DBC
+from othello.backend.DBControl import DBControl
 
 # Create your views here.
 @login_required
@@ -25,7 +25,7 @@ def vscpuHome(request, level):
 def vscpuCreate(request, level):
     print("Hi")
     if request.method == 'GET':
-        game = DBC.createGameCPU(userId=request.user.id, cpuLevel=level)
+        game = DBControl.createGameCPU(userId=request.user.id, cpuLevel=level)
         response = {"gameId": game.id}
         return JsonResponse(response)
     else:
@@ -42,7 +42,7 @@ def vscpuSendChat(request, level, gameId):
     if request.method == 'POST':
         body = request.body
         data = json.loads(body)
-        DBC.sendChat(gameId=gameId, userId=request.user.id, message=data["message"])
+        DBControl.sendChat(gameId=gameId, userId=request.user.id, message=data["message"])
         response = {}
         return JsonResponse(response)
     else:
@@ -51,7 +51,7 @@ def vscpuSendChat(request, level, gameId):
 @login_required
 def vscpuGetChat(request, level, gameId):
     if request.method == 'GET':
-        messages = DBC.getChat(gameId=gameId)
+        messages = DBControl.getChat(gameId=gameId)
         response = {"messages": messages}
         return JsonResponse(response)
     else:
@@ -60,7 +60,7 @@ def vscpuGetChat(request, level, gameId):
 @login_required
 def vscpuGetBoard(request, level, gameId):
     if request.method == 'GET':
-        squares, isMyTurn = DBC.getBoard(gameId=gameId, userId=request.user.id)
+        squares, isMyTurn = DBControl.getBoard(gameId=gameId, userId=request.user.id)
         response = {
             "squares": squares,
             "isMyTurn": isMyTurn
@@ -76,7 +76,7 @@ def vscpuPutStone(request, level, gameId):
         data = json.loads(body)
         x = data["x"]
         y = data["y"]
-        success, message = DBC.putStone(gameId=gameId, userId=request.user.id, x=x, y=y)
+        success, message = DBControl.putStone(gameId=gameId, userId=request.user.id, x=x, y=y)
         if success:
             response = {
                 "success": True

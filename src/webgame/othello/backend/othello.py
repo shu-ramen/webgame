@@ -10,7 +10,7 @@ class OthelloSystem(object):
         """ 初期盤面を取得する
 
         Returns:
-            list(list(int)): オセロの盤面
+            list[list[int]]: オセロの盤面
         """
         blackBoard = 0x0000000810000000
         whiteBoard = 0x0000001008000000
@@ -54,7 +54,7 @@ class BitBoard(object):
         """ 盤面をリストからビットボードに変換する
         
         Args:
-            squares (list(list(int))): 盤面情報
+            squares (list[list[int]]): 盤面情報
         
         Returns:
             int, int: 黒のビットボード，白のビットボード
@@ -80,7 +80,7 @@ class BitBoard(object):
             whiteBoard (int): 白のビットボード（64bit整数）
         
         Returns:
-            list(list(int)): 盤面情報
+            list[list[int]]: 盤面情報
         """
         squares = [[] for i in range(8)]
         mask = 0x8000000000000000
@@ -122,7 +122,7 @@ class BitBoard(object):
             board (int): ビットボード（64bit）
         
         Returns:
-            list(list(int)): 座標[x, y]のリスト
+            list[[int, int]]: 座標[x, y]のリスト
         """
         indices = []
         mask = 0x8000000000000000
