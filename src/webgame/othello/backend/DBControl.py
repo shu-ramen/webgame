@@ -113,6 +113,17 @@ class DBControl(object):
     
     @staticmethod
     def putStone(gameId, userId, x, y):
+        """ 石を置く
+        
+        Args:
+            gameId (int): 対戦中のゲームID
+            userId (int): ログイン中のユーザID
+            x (int): X座標
+            y (int): Y座標
+        
+        Returns:
+            boolean, str: 石が置けたかどうかの真偽値，エラーメッセージ
+        """
         squares, isMyTurn = DBControl.getBoard(gameId, userId)
         if isMyTurn == False:
             return False, "It's not your turn"
