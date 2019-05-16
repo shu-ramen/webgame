@@ -73,6 +73,7 @@ class DBControl(object):
             messages.append("[{}] {} ({})".format(chat.speaker, chat.message, str(chat.timestamp)[0:19]))
         return messages
     
+    @staticmethod
     def getBoard(gameId, userId):
         """ 最新の盤面と次のプレイヤー情報を取得
         
@@ -109,3 +110,39 @@ class DBControl(object):
                     isMyTurn = True
         # Return
         return squares, isMyTurn
+    
+    @staticmethod
+    def putStone(gameId, userId, x, y):
+        squares, isMyTurn = DBControl.getBoard(gameId, userId)
+        if isMyTurn == False:
+            return False, "It's not your turn"
+        playerColor = None
+        game = Game.objects.get(id=gameId)
+        player = Player.objects.get(user=User.objects.get(id=userId))
+        if game.firstPlayer == "player1":
+            if game.player1.user.id == userId:
+                playerColor == OthelloSystem.BLACK
+            else:
+                playerColor == OthelloSystem.WHITE
+        else:
+            if game.player2.user.id == userId:
+                playerColor == OthelloSystem.BLACK
+            else:
+                playerColor == OthelloSystem.WHITE
+        blackBoard, whiteBoard = BitBoard.squaresToBoard(squares)
+        blackBoard, whiteBoard = OthelloSystem.putStone(blackBoard, whiteBoard, playerColor, x, y)
+        if blackBoard is not None and whiteBoard is not None:
+            squares = BitBoard.boardToSquares(blackBoard, whiteBoard)
+            log = Log(
+                game=game,
+                player=player,
+                posX=x,
+                posY=y,
+                isPass=False,
+                blackBoard=blackBoard,
+                whiteBoard=whiteBoard
+            )
+            log.save()
+            return True, "success"
+        else:
+            return False, "You cannot put there"

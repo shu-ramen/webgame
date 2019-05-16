@@ -68,3 +68,24 @@ def vscpuGetBoard(request, level, gameId):
         return JsonResponse(response)
     else:
         return Http404
+
+@login_required
+def vscpuPutStone(request, level, gameId):
+    if request.method == 'POST':
+        body = request.body
+        data = json.loads(body)
+        x = data["x"]
+        y = data["y"]
+        success, message = DBC.putStone(gameId=gameId, userId=request.user.id, x=x, y=y)
+        if success:
+            response = {
+                "success": True
+            }
+        else:
+            response = {
+                "success": False,
+                "message": message
+            }
+        return JsonResponse(response)
+    else:
+        return Http404

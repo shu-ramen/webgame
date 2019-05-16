@@ -18,8 +18,8 @@ class App extends React.Component {
             [-1, -1, -1, -1, -1, -1, -1, -1],
             [-1, -1, -1, -1, -1, -1, -1, -1],
             [-1, -1, -1, -1, -1, -1, -1, -1],
-            [-1, -1, -1,  0,  1, -1, -1, -1],
-            [-1, -1, -1,  1,  0, -1, -1, -1],
+            [-1, -1, -1, -1, -1, -1, -1, -1],
+            [-1, -1, -1, -1, -1, -1, -1, -1],
             [-1, -1, -1, -1, -1, -1, -1, -1],
             [-1, -1, -1, -1, -1, -1, -1, -1],
             [-1, -1, -1, -1, -1, -1, -1, -1]
@@ -38,6 +38,7 @@ class App extends React.Component {
             initialized: false,
             isMyTurn: false,
             isStarted: isStarted,
+            needCallCpu: false,
             messages: [],
         }
 
@@ -56,7 +57,6 @@ class App extends React.Component {
                     if (err) {
                         alert(res.text);
                     }
-                    console.dir(res.body);
                     this.setState({
                         squares: res.body["squares"],
                         isMyTurn: res.body["isMyTurn"],
@@ -72,6 +72,12 @@ class App extends React.Component {
                         messages: res.body["messages"]
                     });
                 }.bind(this));
+            if (this.state.needCallCpu) {
+                alert("Called!!");
+                this.setState({
+                    needCallCpu: false,
+                });
+            }
         }
     }
 
@@ -87,6 +93,29 @@ class App extends React.Component {
         return count;
     }
 
+    putStone(x, y) {
+        // 盤面取得
+        addHeader(request.post("putstone"))
+            .send({
+                "x": x,
+                "y": y,
+            })
+            .end(function (err, res) {
+                if (err) {
+                    alert(res.text);
+                }
+                console.dir(res.body);
+                if (res.body["success"] == true) {
+                    this.setState({
+                        needCallCpu: true,
+                    });
+                }
+                else {
+                    alert(res.body["message"]);
+                }
+            }.bind(this));
+    }
+
     render() {
         let blackCount = this.countStone(this.state.squares, STONES.BLACK);
         let whiteCount = this.countStone(this.state.squares, STONES.WHITE);
@@ -97,7 +126,7 @@ class App extends React.Component {
                     <Col></Col>
                     <Col xl={7} lg={7} md={7} sm={12} xs={12}>
                         <br />
-                        <Board squares={this.state.squares}/>
+                        <Board squares={this.state.squares} isMyTurn={this.state.isMyTurn} putStone={(x, y) => this.putStone(x, y)}/>
                     </Col>
                     <Col xl={3} lg={3} md={3} sm={12} xs={12}>
                         <br />

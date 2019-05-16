@@ -32,7 +32,7 @@ export class Square extends React.Component {
         let stoneTag = this.getStoneTag(this.props.stone);
         return (
             <Col className="square-col">
-                <button className="square" onClick={() => this.props.onClick}>
+                <button className="square" onClick={() => this.props.onClick()}>
                     {stoneTag}
                 </button>
             </Col>
