@@ -1,5 +1,6 @@
 ## React
 src/webgame/resources/react_jsx/node_modules/
+src/webgame/resources/static/js/
 **/.DS_Store
 
 ### Django ###
