@@ -60,6 +60,7 @@ class App extends React.Component {
                     this.setState({
                         squares: res.body["squares"],
                         isMyTurn: res.body["isMyTurn"],
+                        needCallCpu: !res.body["isMyTurn"],
                     });
                 }.bind(this));
             // チャット取得
@@ -72,8 +73,13 @@ class App extends React.Component {
                         messages: res.body["messages"]
                     });
                 }.bind(this));
-            if (this.state.needCallCpu) {
-                alert("Called!!");
+            if (!this.state.isMyTurn && this.state.needCallCpu) {
+                addHeader(request.get("cpuplay"))
+                    .end(function (err, res) {
+                        if (err) {
+                            alert(res.text);
+                        }
+                    }.bind(this));
                 this.setState({
                     needCallCpu: false,
                 });

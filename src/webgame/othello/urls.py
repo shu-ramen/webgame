@@ -10,4 +10,5 @@ urlpatterns = [
     path('vscpu/<int:level>/<int:gameId>/getchat', views.vscpuGetChat, name='othello-vscpuGetChat'),
     path('vscpu/<int:level>/<int:gameId>/getboard', views.vscpuGetBoard, name='othello-vscpuGetBoard'),
     path('vscpu/<int:level>/<int:gameId>/putstone', views.vscpuPutStone, name='othello-vscpuPutStone'),
+    path('vscpu/<int:level>/<int:gameId>/cpuplay', views.vscpuCpuPlay, name='othello-vscpuCpuPlay'),
 ]

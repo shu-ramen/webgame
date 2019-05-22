@@ -89,3 +89,20 @@ def vscpuPutStone(request, level, gameId):
         return JsonResponse(response)
     else:
         return Http404
+
+@login_required
+def vscpuCpuPlay(request, level, gameId):
+    if request.method == 'GET':
+        success, message = DBControl.cpuPlay(cpuLevel=level, gameId=gameId)
+        if success:
+            response = {
+                "success": True
+            }
+        else:
+            response = {
+                "success": False,
+                "message": message
+            }
+        return JsonResponse(response)
+    else:
+        return Http404

@@ -39,12 +39,12 @@ class OthelloSystem(object):
             legalBoard = BitBoard.makeLegalBoard(whiteBoard, blackBoard)
         if pos & legalBoard:
             if palyerColor == OthelloSystem.BLACK:
-                blackBoard, whiteBoard, reverseBoard = BitBoard.reverse(blackBoard, whiteBoard, pos)
+                blackBoard, whiteBoard, reverseBoard, history = BitBoard.reverse(blackBoard, whiteBoard, pos)
             else:
-                whiteBoard, blackBoard, reverseBoard = BitBoard.reverse(whiteBoard, blackBoard, pos)
+                whiteBoard, blackBoard, reverseBoard, history = BitBoard.reverse(whiteBoard, blackBoard, pos)
         else:
             return None, None
-        return blackBoard, whiteBoard
+        return blackBoard, whiteBoard, history
 
 class BitBoard(object):
     VEC = [-9, -8, -7, -1, 1, 7, 8, 9]
@@ -216,6 +216,24 @@ class BitBoard(object):
         for i in range(x + y * 8):
             pos = pos >> 1
         return pos
+    
+    
+    @staticmethod
+    def calcXY(pos):
+        """ 64bit座標からXY座標を計算する
+        
+        Args:
+            pos (int): 64bit座標
+        
+        Returns:
+            int, int: X, Y座標
+        """
+        mask = 0x8000000000000000
+        for i in range(64):
+            if pos & mask:
+                return (i % 8), (i // 8)
+            pos = pos >> 1
+        return -1, -1
 
     @staticmethod
     def reverse(myBoard, enemyBoard, putPos):
@@ -229,20 +247,24 @@ class BitBoard(object):
         Returns:
             int, int, int: 黒，白，反転箇所のビットボード（64bit）
         """
+        history = []
         reverseBoard = 0x0000000000000000
         for vec in BitBoard.VEC:
+            tempHistory = []
             tempBoard = 0x0000000000000000
             mask = BitBoard.transfer(putPos, vec) # posからvec方向に進む
             while ((mask != 0) and ((mask & enemyBoard) != 0)):
                 # 範囲内にあり，捜査線上に敵コマが存在する限り繰り返す
                 tempBoard |= mask
-                mask = BitBoard.transfer(mask, vec) # どんどんvec方向に進む
+                tempHistory.append(BitBoard.calcXY(mask))
+                mask = BitBoard.transfer(mask, vec)  # どんどんvec方向に進む
             if ((mask & myBoard) != 0):
                 # 進んだ先に自コマがあればひっくり返す
                 reverseBoard |= tempBoard
+                history.extend(tempHistory)
         myBoard    ^= putPos | reverseBoard # 置いた駒と反転したコマの位置でXOR
         enemyBoard ^= reverseBoard          # 反転したコマの位置でXOR
-        return myBoard, enemyBoard, reverseBoard
+        return myBoard, enemyBoard, reverseBoard, history
     
     def transfer(putPos, vec):
         """ vec方向にposを移動させる関数

@@ -3,6 +3,7 @@ import random
 from django.contrib.auth.models import User
 from othello.models import Player, Status, Game, Log, Chat
 from othello.backend.othello import OthelloSystem, BitBoard
+from othello.backend.AI import RandomAI
 
 class DBControl(object):
     @staticmethod
@@ -132,16 +133,16 @@ class DBControl(object):
         player = Player.objects.get(user=User.objects.get(id=userId))
         if game.firstPlayer == "player1":
             if game.player1.user.id == userId:
-                playerColor == OthelloSystem.BLACK
+                playerColor = OthelloSystem.BLACK
             else:
-                playerColor == OthelloSystem.WHITE
+                playerColor = OthelloSystem.WHITE
         else:
             if game.player2.user.id == userId:
-                playerColor == OthelloSystem.BLACK
+                playerColor = OthelloSystem.BLACK
             else:
-                playerColor == OthelloSystem.WHITE
+                playerColor = OthelloSystem.WHITE
         blackBoard, whiteBoard = BitBoard.squaresToBoard(squares)
-        blackBoard, whiteBoard = OthelloSystem.putStone(blackBoard, whiteBoard, playerColor, x, y)
+        blackBoard, whiteBoard, history = OthelloSystem.putStone(blackBoard, whiteBoard, playerColor, x, y)
         if blackBoard is not None and whiteBoard is not None:
             squares = BitBoard.boardToSquares(blackBoard, whiteBoard)
             log = Log(
@@ -157,3 +158,58 @@ class DBControl(object):
             return True, "success"
         else:
             return False, "You cannot put there"
+    
+    @staticmethod
+    def cpuPlay(cpuLevel, gameId):
+        # CPU情報取得
+        cpuUser = User.objects.get(username="othello_cpu_{}".format(cpuLevel))
+        cpu = Player.objects.get(user=cpuUser)
+        squares, isCpuTurn = DBControl.getBoard(gameId, cpu.id)
+        if isCpuTurn == False:
+            return False, "It's not cpu's turn"
+        game = Game.objects.get(id=gameId)
+        if game.firstPlayer == "player1":
+            if game.player1.user.id == cpu.id:
+                cpuColor = OthelloSystem.BLACK
+            else:
+                cpuColor = OthelloSystem.WHITE
+        else:
+            if game.player2.user.id == cpu.id:
+                cpuColor = OthelloSystem.BLACK
+            else:
+                cpuColor = OthelloSystem.WHITE
+        if cpuLevel == 1:
+            ai = RandomAI(cpuColor, squares)
+        myBoard, enemyBoard, x, y, history = ai.think()
+        if myBoard is not None and enemyBoard is not None:
+            if cpuColor == OthelloSystem.BLACK:
+                blackBoard = myBoard
+                whiteBoard = enemyBoard
+            elif cpuColor == OthelloSystem.WHITE:
+                blackBoard = enemyBoard
+                whiteBoard = myBoard
+            else:
+                return False, "Error"
+            log = Log(
+                game=game,
+                player=cpu,
+                posX=x,
+                posY=y,
+                isPass=False,
+                blackBoard=blackBoard,
+                whiteBoard=whiteBoard
+            )
+            log.save()
+            return True, "success"
+        else:
+            log = Log(
+                game=game,
+                player=cpu,
+                posX=-1,
+                posY=-1,
+                isPass=True,
+                blackBoard=blackBoard,
+                whiteBoard=whiteBoard
+            )
+            log.save()
+            return True, "success"
