@@ -161,6 +161,15 @@ class DBControl(object):
     
     @staticmethod
     def cpuPlay(cpuLevel, gameId):
+        """ CPUの手番実行
+        
+        Args:
+            cpuLevel (int): CPUのレベル
+            gameId (int): 対戦中のゲームID
+        
+        Returns:
+            boolean, str: 石を置いたかどうかの真偽値，エラーメッセージ
+        """
         # CPU情報取得
         cpuUser = User.objects.get(username="othello_cpu_{}".format(cpuLevel))
         cpu = Player.objects.get(user=cpuUser)
