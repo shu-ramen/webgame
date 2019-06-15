@@ -7,6 +7,7 @@ src/webgame/resources/static/js/
 *.log
 *.pot
 *.pyc
+**/.vscode/
 **/__pycache__/
 /src/webgaem/local_settings.py
 /src/webgame/db.sqlite3
