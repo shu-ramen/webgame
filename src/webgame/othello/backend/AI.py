@@ -1,4 +1,5 @@
 import random
+from copy import deepcopy
 
 from abc import ABCMeta, abstractmethod
 from othello.backend.othello import OthelloSystem, BitBoard
@@ -8,14 +9,6 @@ class OthelloAI(metaclass=ABCMeta):
     def __init__(self, cpuColor, squares):
         self._cpuColor = cpuColor
         self._squares = squares
-
-    @property
-    def cpuColor(self):
-        return self._cpuColor
-    
-    @property
-    def squares(self):
-        return self._squares
     
     @abstractmethod
     def think(self):
@@ -26,30 +19,25 @@ class RandomAI(OthelloAI):
         super().__init__(cpuColor, squares)
 
     def think(self):
-        blackBoard, whiteBoard = BitBoard.squaresToBoard(self.squares)
+        blackBoard, whiteBoard = BitBoard.squaresToBoard(self._squares)
         # 置く場所があるか判断．なければパスをする．
-        for i in range(64):
-            if self.cpuColor == OthelloSystem.BLACK and BitBoard.canPut(blackBoard, whiteBoard):
-                break
-            elif self.cpuColor == OthelloSystem.WHITE and BitBoard.canPut(whiteBoard, blackBoard):
-                break
-            if i == 63:
-                return None, None
+        if not ((self._cpuColor == OthelloSystem.BLACK and BitBoard.canPut(blackBoard, whiteBoard))
+            or (self._cpuColor == OthelloSystem.WHITE and BitBoard.canPut(whiteBoard, blackBoard))):
+            return None, None, None, None, None
         # ランダムに置いて最初にヒットしたところを選ぶ
-        myBoard = None
-        enemyBoard = None
-        reverseBoard = None
+        blackBoard_ret = None
+        whiteBoard_ret = None
+        x = None
+        y = None
         history = None
-        while (True):
-            idx = random.randrange(64)
-            pos = 0x8000000000000000
-            for i in range(idx):
-                pos = pos >> 1
-            if self.cpuColor == OthelloSystem.BLACK:
-                myBoard, enemyBoard, reverseBoard, history = BitBoard.reverse(blackBoard, whiteBoard, pos)
-            elif self.cpuColor == OthelloSystem.WHITE:
-                myBoard, enemyBoard, reverseBoard, history = BitBoard.reverse(whiteBoard, blackBoard, pos)
-            if BitBoard.countBoard(reverseBoard):
-                x, y = BitBoard.calcXY(pos)
+        for idx in random.sample(range(64), k=64):
+            x, y = BitBoard.calcXYfromInt(idx)
+            print(idx, x, y)
+            blackBoard_ret, whiteBoard_ret, history = OthelloSystem.putStone(deepcopy(blackBoard), deepcopy(whiteBoard), self._cpuColor, x, y)
+            if blackBoard_ret is not None and whiteBoard_ret is not None:
+                print(x)
+                print(y)
+                print(blackBoard)
+                print(whiteBoard)
                 break
-        return myBoard, enemyBoard, x, y, history
+        return blackBoard_ret, whiteBoard_ret, x, y, history

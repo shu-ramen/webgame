@@ -29,7 +29,7 @@ class OthelloSystem(object):
             y (int): 置き場所のY座標
         
         Returns:
-            int, int: 更新後の黒のビットボード，更新後の白のビットボード
+            int, int, list: 更新後の黒のビットボード，更新後の白のビットボード, 反転する駒の履歴
         """
         pos = BitBoard.calcPos(x, y)
         legalBoard = None
@@ -43,7 +43,7 @@ class OthelloSystem(object):
             else:
                 whiteBoard, blackBoard, reverseBoard, history = BitBoard.reverse(whiteBoard, blackBoard, pos)
         else:
-            return None, None
+            return None, None, None
         return blackBoard, whiteBoard, history
 
 class BitBoard(object):
@@ -94,7 +94,6 @@ class BitBoard(object):
                     squares[i].append(OthelloSystem.EMPTY)
                 mask = mask >> 1
         return squares
-        
     
     @staticmethod
     def countBoard(board):
@@ -213,13 +212,12 @@ class BitBoard(object):
             int: ビットボードにおける座標（64bit）
         """
         pos = 0x8000000000000000
-        for i in range(x + y * 8):
+        for _ in range(x + y * 8):
             pos = pos >> 1
         return pos
     
-    
     @staticmethod
-    def calcXY(pos):
+    def calcXYfromBit(pos):
         """ 64bit座標からXY座標を計算する
         
         Args:
@@ -231,9 +229,21 @@ class BitBoard(object):
         mask = 0x8000000000000000
         for i in range(64):
             if pos & mask:
-                return (i % 8), (i // 8)
-            pos = pos >> 1
+                return (i % 8), int(i / 8)
+            mask = mask >> 1
         return -1, -1
+
+    @staticmethod
+    def calcXYfromInt(pos):
+        """ 0-63の整数からXY座標を計算する
+        
+        Args:
+            pos (int): 0-63の整数
+        
+        Returns:
+            int, int: X, Y座標
+        """
+        return ((64 - pos) % 8), int((64 - pos) / 8)
 
     @staticmethod
     def reverse(myBoard, enemyBoard, putPos):
@@ -256,7 +266,7 @@ class BitBoard(object):
             while ((mask != 0) and ((mask & enemyBoard) != 0)):
                 # 範囲内にあり，捜査線上に敵コマが存在する限り繰り返す
                 tempBoard |= mask
-                tempHistory.append(BitBoard.calcXY(mask))
+                tempHistory.append(BitBoard.calcXYfromBit(mask))
                 mask = BitBoard.transfer(mask, vec)  # どんどんvec方向に進む
             if ((mask & myBoard) != 0):
                 # 進んだ先に自コマがあればひっくり返す

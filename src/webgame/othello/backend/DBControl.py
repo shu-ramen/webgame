@@ -101,7 +101,7 @@ class DBControl(object):
             if log.player.user.id != userId:
                 isMyTurn = True
         else:
-            # まだ一つも指し手がなければ
+            # まだ一つも指し手がなければ，初期盤面と自分のターンかどうかを返す
             squares = OthelloSystem.getInitSquares()
             if game.firstPlayer == "player1":
                 if game.player1.user.id == userId:
@@ -160,7 +160,7 @@ class DBControl(object):
             return False, "You cannot put there"
     
     @staticmethod
-    def cpuPlay(cpuLevel, gameId):
+    def cpuPut(cpuLevel, gameId):
         """ CPUの手番実行
         
         Args:
@@ -174,6 +174,7 @@ class DBControl(object):
         cpuUser = User.objects.get(username="othello_cpu_{}".format(cpuLevel))
         cpu = Player.objects.get(user=cpuUser)
         squares, isCpuTurn = DBControl.getBoard(gameId, cpu.id)
+
         if isCpuTurn == False:
             return False, "It's not cpu's turn"
         game = Game.objects.get(id=gameId)
@@ -189,16 +190,10 @@ class DBControl(object):
                 cpuColor = OthelloSystem.WHITE
         if cpuLevel == 1:
             ai = RandomAI(cpuColor, squares)
-        myBoard, enemyBoard, x, y, history = ai.think()
-        if myBoard is not None and enemyBoard is not None:
-            if cpuColor == OthelloSystem.BLACK:
-                blackBoard = myBoard
-                whiteBoard = enemyBoard
-            elif cpuColor == OthelloSystem.WHITE:
-                blackBoard = enemyBoard
-                whiteBoard = myBoard
-            else:
-                return False, "Error"
+        
+        blackBoard, whiteBoard, x, y, history = ai.think()
+        
+        if (blackBoard is not None and whiteBoard is not None):
             log = Log(
                 game=game,
                 player=cpu,
@@ -211,6 +206,7 @@ class DBControl(object):
             log.save()
             return True, "success"
         else:
+            blackBoard, whiteBoard = BitBoard.squaresToBoard(squares)
             log = Log(
                 game=game,
                 player=cpu,

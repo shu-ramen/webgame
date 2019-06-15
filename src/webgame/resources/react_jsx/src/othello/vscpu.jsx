@@ -55,7 +55,7 @@ class App extends React.Component {
             addHeader(request.get("getboard"))
                 .end(function (err, res) {
                     if (err) {
-                        alert(res.text);
+                        alert(err.text);
                     }
                     this.setState({
                         squares: res.body["squares"],
@@ -67,22 +67,27 @@ class App extends React.Component {
             addHeader(request.get("getchat"))
                 .end(function (err, res) {
                     if (err) {
-                        alert(res.text);
+                        alert(err.text);
                     }
                     this.setState({
                         messages: res.body["messages"]
                     });
                 }.bind(this));
             if (!this.state.isMyTurn && this.state.needCallCpu) {
-                addHeader(request.get("cpuplay"))
+                console.log("cpu");
+                addHeader(request.get("cpuput"))
                     .end(function (err, res) {
+                        console.dir(err);
+                        console.dir(res);
                         if (err) {
-                            alert(res.text);
+                            alert(err.text);
+                        }
+                        if (res.body["success"] == true) {
+                            this.setState({
+                                needCallCpu: false,
+                            });
                         }
                     }.bind(this));
-                this.setState({
-                    needCallCpu: false,
-                });
             }
         }
     }
