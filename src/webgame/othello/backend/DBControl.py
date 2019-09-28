@@ -83,13 +83,25 @@ class DBControl(object):
             userId (int): ログイン中のユーザID
         
         Returns:
-            list[list[int]], boolean: 盤面情報と次の指し手がユーザーか否か
+            list[list[int]], boolean, int: 盤面情報，次の指し手がユーザーか否か，プレーヤーの石の色
         """
-        # 変数を設定
+        # 変数定義
         squares = None
         isMyTurn = False
+        playerColor = None
         # ゲーム情報を取得
-        game = Game.objects.get(id=gameId)
+        game = Game.objects.get(id = gameId)
+        # プレイヤーカラーを取得
+        if game.firstPlayer == "player1":
+            if game.player1.user.id == userId:
+                playerColor = OthelloSystem.BLACK
+            else:
+                playerColor = OthelloSystem.WHITE
+        elif game.firstPlayer == "player2":
+            if game.player1.user.id == userId:
+                playerColor = OthelloSystem.WHITE
+            else:
+                playerColor = OthelloSystem.BLACK
         # ログを取得
         logs = Log.objects.filter(game=game)
         if (len(logs) > 0):
@@ -110,8 +122,31 @@ class DBControl(object):
                 if game.player2.user.id == userId:
                     isMyTurn = True
         # Return
-        return squares, isMyTurn
+        return squares, isMyTurn, playerColor
     
+    @staticmethod
+    def getUsername(gameId, userId):
+        """ 自分と対戦相手のユーザー名を取得
+        
+        Args:
+            gameId (int): 対戦中のゲームID
+            userId (int): ログイン中のユーザID
+        
+        Returns:
+            str, str: 自分のユーザー名，相手のユーザー名
+        """
+        # ゲーム情報を取得
+        game = Game.objects.get(id = gameId)
+        # プレイヤーカラーを取得
+        if game.player1.user.id == userId:
+            playerUsername = game.player1.user.username
+            enemyUsername = game.player2.user.username
+        else:
+            playerUsername = game.player2.user.username
+            enemyUsername = game.player1.user.username
+        # Return
+        return playerUsername, enemyUsername
+
     @staticmethod
     def putStone(gameId, userId, x, y):
         """ 石を置く
@@ -125,22 +160,11 @@ class DBControl(object):
         Returns:
             boolean, str: 石が置けたかどうかの真偽値，エラーメッセージ
         """
-        squares, isMyTurn = DBControl.getBoard(gameId, userId)
+        squares, isMyTurn, playerColor = DBControl.getBoard(gameId, userId)
         if isMyTurn == False:
             return False, "It's not your turn"
-        playerColor = None
         game = Game.objects.get(id=gameId)
         player = Player.objects.get(user=User.objects.get(id=userId))
-        if game.firstPlayer == "player1":
-            if game.player1.user.id == userId:
-                playerColor = OthelloSystem.BLACK
-            else:
-                playerColor = OthelloSystem.WHITE
-        else:
-            if game.player2.user.id == userId:
-                playerColor = OthelloSystem.BLACK
-            else:
-                playerColor = OthelloSystem.WHITE
         blackBoard, whiteBoard = BitBoard.squaresToBoard(squares)
         blackBoard, whiteBoard, history = OthelloSystem.putStone(blackBoard, whiteBoard, playerColor, x, y)
         if blackBoard is not None and whiteBoard is not None:
@@ -173,21 +197,12 @@ class DBControl(object):
         # CPU情報取得
         cpuUser = User.objects.get(username="othello_cpu_{}".format(cpuLevel))
         cpu = Player.objects.get(user=cpuUser)
-        squares, isCpuTurn = DBControl.getBoard(gameId, cpu.id)
+        squares, isCpuTurn, cpuColor = DBControl.getBoard(gameId, cpu.id)
 
         if isCpuTurn == False:
             return False, "It's not cpu's turn"
+        
         game = Game.objects.get(id=gameId)
-        if game.firstPlayer == "player1":
-            if game.player1.user.id == cpu.id:
-                cpuColor = OthelloSystem.BLACK
-            else:
-                cpuColor = OthelloSystem.WHITE
-        else:
-            if game.player2.user.id == cpu.id:
-                cpuColor = OthelloSystem.BLACK
-            else:
-                cpuColor = OthelloSystem.WHITE
         if cpuLevel == 1:
             ai = RandomAI(cpuColor, squares)
         

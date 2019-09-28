@@ -25,19 +25,10 @@ class RandomAI(OthelloAI):
             or (self._cpuColor == OthelloSystem.WHITE and BitBoard.canPut(whiteBoard, blackBoard))):
             return None, None, None, None, None
         # ランダムに置いて最初にヒットしたところを選ぶ
-        blackBoard_ret = None
-        whiteBoard_ret = None
-        x = None
-        y = None
-        history = None
         for idx in random.sample(range(64), k=64):
             x, y = BitBoard.calcXYfromInt(idx)
             print(idx, x, y)
             blackBoard_ret, whiteBoard_ret, history = OthelloSystem.putStone(deepcopy(blackBoard), deepcopy(whiteBoard), self._cpuColor, x, y)
             if blackBoard_ret is not None and whiteBoard_ret is not None:
-                print(x)
-                print(y)
-                print(blackBoard)
-                print(whiteBoard)
                 break
         return blackBoard_ret, whiteBoard_ret, x, y, history

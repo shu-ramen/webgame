@@ -1,12 +1,49 @@
 import React from 'react';
-import request from 'superagent'
-import { addHeader } from '../../share/csrf.jsx';
 import { Card, Container, Row, Col } from 'react-bootstrap';
-import { Square } from './square.jsx';
+import { Square, STONES } from './square.jsx';
 
 export class Board extends React.Component {
     constructor() {
         super();
+    }
+
+    createInfoRow(isMyTurn, playerColor, playerUsername, enemyUsername) {
+        let nextPlayer = isMyTurn ? playerUsername : enemyUsername;
+        let blackStone = <img className="stone-icon" src="/static/images/dog.png"></img>;
+        let whiteStone = <img className="stone-icon" src="/static/images/cat.png"></img>;
+        if (playerColor == STONES.BLACK) {
+            return (
+                <Row>
+                    <Col xl={9} lg={9} md={9} sm={12} xs={12}>
+                        <h6>{playerUsername} {blackStone} vs {whiteStone} {enemyUsername}</h6>
+                    </Col>
+                    <Col xl={3} lg={3} md={3} sm={12} xs={12}>
+                        <h6 clasName="text-right">{nextPlayer}'s Turn</h6>
+                    </Col>
+                </Row>
+            )
+        }
+        else if (playerColor == STONES.WHITE) {
+            return (
+                <Row>
+                    <Col xl={9} lg={9} md={9} sm={12} xs={12}>
+                        <h6>{playerUsername} {whiteStone} vs {blackStone} {enemyUsername}</h6>
+                    </Col>
+                    <Col xl={3} lg={3} md={3} sm={12} xs={12}>
+                        <h6 className="text-right">{nextPlayer}'s Turn</h6>
+                    </Col>
+                </Row>
+            )
+        }
+        else {
+            return (
+                <Row>
+                <Col xl={12} lg={12} md={12} sm={12} xs={12}>
+                    <h6>Click START button to play a game.</h6>
+                </Col>
+                </Row>
+            )
+        }
     }
 
     createBoard(squares) {
@@ -36,24 +73,19 @@ export class Board extends React.Component {
     }
 
     render() {
+        let infoRow = this.createInfoRow(
+            this.props.isMyTurn,
+            this.props.playerColor,
+            this.props.playerUsername,
+            this.props.enemyUsername
+        );
         let board = this.createBoard(this.props.squares);
-        let nextPlayer = this.props.isMyTurn == true ? "YOU" : "CPU";
         return (
             <Card>
                 <Card.Header className="text-center" as="h5">GAME</Card.Header>
                 <Card.Body>
                     <Container>
-                        <Row>
-                            <Col xl={7} lg={7} md={7} sm={12} xs={12}>
-                                <h6>Player vs CPU</h6>
-                            </Col>
-                            <Col xl={3} lg={3} md={3} sm={12} xs={12}>
-                                <h6>Next Player</h6>
-                            </Col>
-                            <Col xl={2} lg={2} md={2} sm={12} xs={12}>
-                                <h6>{nextPlayer}</h6>
-                            </Col>
-                        </Row>
+                        {infoRow}
                         <br />
                         {board}
                     </Container>

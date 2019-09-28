@@ -37,6 +37,9 @@ class App extends React.Component {
             squares: squares,
             initialized: false,
             isMyTurn: false,
+            playerColor: -1,
+            playerUsername: "",
+            enemyUsername: "",
             isStarted: isStarted,
             needCallCpu: false,
             messages: [],
@@ -61,6 +64,9 @@ class App extends React.Component {
                         squares: res.body["squares"],
                         isMyTurn: res.body["isMyTurn"],
                         needCallCpu: !res.body["isMyTurn"],
+                        playerColor: res.body["playerColor"],
+                        playerUsername: res.body["playerUsername"],
+                        enemyUsername: res.body["enemyUsername"]
                     });
                 }.bind(this));
             // チャット取得
@@ -137,7 +143,14 @@ class App extends React.Component {
                     <Col></Col>
                     <Col xl={7} lg={7} md={7} sm={12} xs={12}>
                         <br />
-                        <Board squares={this.state.squares} isMyTurn={this.state.isMyTurn} putStone={(x, y) => this.putStone(x, y)}/>
+                        <Board
+                            squares={this.state.squares}
+                            isMyTurn={this.state.isMyTurn}
+                            putStone={(x, y) => this.putStone(x, y)}
+                            playerColor={this.state.playerColor}
+                            playerUsername={this.state.playerUsername}
+                            enemyUsername={this.state.enemyUsername}
+                        />
                     </Col>
                     <Col xl={3} lg={3} md={3} sm={12} xs={12}>
                         <br />

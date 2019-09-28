@@ -60,10 +60,14 @@ def vscpuGetChat(request, level, gameId):
 @login_required
 def vscpuGetBoard(request, level, gameId):
     if request.method == 'GET':
-        squares, isMyTurn = DBControl.getBoard(gameId=gameId, userId=request.user.id)
+        squares, isMyTurn, playerColor = DBControl.getBoard(gameId=gameId, userId=request.user.id)
+        playerUsername, enemyUsername = DBControl.getUsername(gameId=gameId, userId=request.user.id)
         response = {
             "squares": squares,
-            "isMyTurn": isMyTurn
+            "isMyTurn": isMyTurn,
+            "playerColor": playerColor,
+            "playerUsername": playerUsername,
+            "enemyUsername": enemyUsername
         }
         return JsonResponse(response)
     else:
